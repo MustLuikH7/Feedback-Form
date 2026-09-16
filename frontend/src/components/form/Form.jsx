@@ -14,6 +14,7 @@ function Form() {
             </select>
             <input type="text" name="firstName" placeholder="Eesnimi" />
             <input type="text" name="lasName" placeholder="Perekonnanimi" />
+            <button type="submit">Saada</button>
         </form>
     )
 }
