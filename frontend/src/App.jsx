@@ -4,9 +4,7 @@ import './App.css'
 function App() {
 
   return (
-    <div>
-      <h1>MEIE FORM FEEDBACK</h1>
-    </div>
+    <Header />
   )
 }
 
