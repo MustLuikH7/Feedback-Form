@@ -1,10 +1,12 @@
 import teachers from "../../../../teachers.json" with { type: 'json' };
+import subjects from "../../../../subject.json" with { type: 'json'}
 function Form() {
     return (
         <form action="submit">
             <select name="selectSubject">
-                <option value="Matemaatika">Matemaatika</option>
-                {/* lisa koik ylejaanud */}
+                {subjects.map((subject) =>
+                    <option value={subject.name}>{subject.name}</option>
+                )}
             </select>
             <select name="selectTeacher">
                 {teachers.map((teacher) =>

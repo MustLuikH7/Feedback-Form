@@ -1,5 +1,5 @@
-{
-  "subjects": [
+
+[
     { "name": "Digioskuste arendamine" },
     { "name": "Õpitee" },
     { "name": "IT valdkonna alusteadmised" },
@@ -144,4 +144,4 @@
     { "name": "Programmeerimine" },
     { "name": "Projektijuhtimine" }
   ]
-}
+
