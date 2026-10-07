@@ -1,6 +1,7 @@
 import { useState } from "react";
 import teachers from "../../../../teachers.json" with { type: "json" };
 import subjects from "../../../../subjects.json" with { type: "json" };
+import { saveFeedback } from "../../firebase";
 import "./form.css";
 
 const grades = [
@@ -29,8 +30,10 @@ function FieldError({ id, message }) {
 function Form() {
   const [errors, setErrors] = useState({});
   const [sentGrade, setSentGrade] = useState(null);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(null);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
@@ -47,8 +50,24 @@ function Form() {
       return;
     }
 
-    // TODO: saada andmed backendi, kui see on valmis.
-    setSentGrade(data.get("grade"));
+    setSending(true);
+    setSendError(null);
+    try {
+      await saveFeedback({
+        subject: data.get("selectSubjects"),
+        teacher: data.get("selectTeacher"),
+        grade: Number(data.get("grade")),
+        comment: data.get("kommentaar").trim(),
+        firstName: data.get("firstName").trim(),
+        lastName: data.get("lastName").trim(),
+      });
+      setSentGrade(data.get("grade"));
+    } catch (error) {
+      console.error(error);
+      setSendError("Tagasiside saatmine ebaõnnestus. Proovi uuesti.");
+    } finally {
+      setSending(false);
+    }
   }
 
   function clearError(name) {
@@ -58,6 +77,7 @@ function Form() {
   function startOver() {
     setSentGrade(null);
     setErrors({});
+    setSendError(null);
   }
 
   if (sentGrade) {
@@ -211,8 +231,9 @@ function Form() {
         </div>
       </fieldset>
 
-      <button type="submit" className="button">
-        Saada tagasiside
+      <FieldError id="send-error" message={sendError} />
+      <button type="submit" className="button" disabled={sending}>
+        {sending ? "Saadan…" : "Saada tagasiside"}
       </button>
     </form>
   );

@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 .claude
+
+# Firebase
+.firebase
+firebase-debug.log
+firestore-debug.log

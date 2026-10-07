@@ -1,0 +1,74 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: feedback
+// Document ID: auto-generated (addDoc)
+// Fields:
+//   - subject:   string (required, 1-200 chars)  - õppeaine nimi
+//   - teacher:   string (required, 1-200 chars)  - õpetaja täisnimi
+//   - grade:     int    (required, 1-5)          - hinne
+//   - comment:   string (required, 0-2000 chars) - kommentaar, võib olla tühi
+//   - firstName: string (required, 0-100 chars)  - tühi = anonüümne
+//   - lastName:  string (required, 0-100 chars)  - tühi = anonüümne
+//   - uid:       string (required, == request.auth.uid) - anonüümse kasutaja id
+//   - createdAt: timestamp (required, == request.time)
+//
+// Kõik väljad on pärast loomist muutumatud. Kliendid saavad tagasisidet
+// ainult lisada; lugemine, muutmine ja kustutamine on keelatud (andmeid
+// loetakse Firebase konsoolist või Admin SDK-ga, mis reegleid ei järgi).
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isString(value, minLen, maxLen) {
+      return value is string && value.size() >= minLen && value.size() <= maxLen;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidFeedback(data) {
+      return data.keys().hasAll(['subject', 'teacher', 'grade', 'comment',
+                                 'firstName', 'lastName', 'uid', 'createdAt']) &&
+             data.keys().hasOnly(['subject', 'teacher', 'grade', 'comment',
+                                  'firstName', 'lastName', 'uid', 'createdAt']) &&
+             isString(data.subject, 1, 200) &&
+             isString(data.teacher, 1, 200) &&
+             data.grade is int && data.grade >= 1 && data.grade <= 5 &&
+             isString(data.comment, 0, 2000) &&
+             isString(data.firstName, 0, 100) &&
+             isString(data.lastName, 0, 100) &&
+             data.uid == request.auth.uid &&
+             data.createdAt == request.time;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /feedback/{feedbackId} {
+      allow create: if isAuthenticated() && isValidFeedback(request.resource.data);
+      // Tagasiside on muutumatu ja kliendid ei saa seda lugeda.
+      allow read, update, delete: if false;
+    }
+
+    // Kõik muu on vaikimisi keelatud.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
