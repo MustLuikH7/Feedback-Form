@@ -7,18 +7,28 @@ rules_version = '2';
 // Collection: feedback
 // Document ID: auto-generated (addDoc)
 // Fields:
-//   - subject:   string (required, 1-200 chars)  - õppeaine nimi
-//   - teacher:   string (required, 1-200 chars)  - õpetaja täisnimi
-//   - grade:     int    (required, 1-5)          - hinne
+//   - subject:   string (required, one of subjects.json)  - õppeaine nimi
+//   - teacher:   string (required, one of teachers.json)  - õpetaja täisnimi
+//   - grade:     int    (required, 1-5)                   - hinne
 //   - comment:   string (required, 0-2000 chars) - kommentaar, võib olla tühi
 //   - firstName: string (required, 0-100 chars)  - tühi = anonüümne
 //   - lastName:  string (required, 0-100 chars)  - tühi = anonüümne
-//   - uid:       string (required, == request.auth.uid) - anonüümse kasutaja id
+//   - uid:       string (required, == request.auth.uid) - vastaja (anonüümne) id
 //   - createdAt: timestamp (required, == request.time)
 //
-// Kõik väljad on pärast loomist muutumatud. Kliendid saavad tagasisidet
-// ainult lisada; lugemine, muutmine ja kustutamine on keelatud (andmeid
-// loetakse Firebase konsoolist või Admin SDK-ga, mis reegleid ei järgi).
+// Tagasisidet saavad lisada kõik sisselogitud (ka anonüümsed) kasutajad.
+// Lugeda saab õpetaja ainult enda kohta käivat tagasisidet, admin kõike.
+// Muuta ei saa keegi, kustutada saab ainult admin (nt spämmi eemaldamiseks).
+//
+// Collection: staff
+// Document ID: Firebase Auth uid
+// Fields:
+//   - email:   string (required, 3-200 chars)
+//   - teacher: string | null (required, one of teachers.json) - kelle tagasisidet näeb
+//   - role:    string (required, 'teacher' | 'admin')
+//
+// Kirjutada saab ainult admin. Kasutaja näeb oma dokumenti, admin kõiki.
+// Esimene admin luuakse käsitsi (Firebase konsool / admin token).
 //
 // ===============================================================
 
@@ -33,9 +43,297 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function staffPath() {
+      return /databases/$(database)/documents/staff/$(request.auth.uid);
+    }
+
+    function isStaff() {
+      return isAuthenticated() && exists(staffPath());
+    }
+
+    function staffData() {
+      return get(staffPath()).data;
+    }
+
+    function isAdmin() {
+      return isStaff() && staffData().role == 'admin';
+    }
+
     function isString(value, minLen, maxLen) {
       return value is string && value.size() >= minLen && value.size() <= maxLen;
     }
+
+    // Loendid genereeritakse teachers.json ja subjects.json põhjal:
+    //   node scripts/sync-rules-lists.mjs
+    // (käivitub automaatselt ka `firebase deploy --only firestore` eel).
+    // BEGIN GENERATED LISTS
+    function isKnownTeacher(value) {
+      return value in [
+        "Kadri Agu",
+        "Liivia Agu",
+        "Henry Edward Aimre",
+        "Andre Allese",
+        "Kristi Arendi",
+        "Inga Ausmeel",
+        "Anu Baum",
+        "Aivo Brenner",
+        "Heigo-Aulemb Ensling",
+        "Stanislav Huttunen",
+        "Nikolai Jumajev",
+        "Hurmi Jürjens",
+        "Marco Kaare",
+        "Kristo Kaasan",
+        "Kuldar Kaasik",
+        "Ivar Kaljula",
+        "Ivar Kaselaid",
+        "Hilja Kattago",
+        "Kaido Kiil",
+        "Tatjana Kirotar",
+        "Kevin Otto Koit",
+        "Julia Konieva",
+        "Villu Kopli",
+        "Aleksandr Kormiltsõn",
+        "Anna-Liisa Kree",
+        "Lea Kreinin",
+        "Urmas Krusell",
+        "Kairi Kruus",
+        "Elena Kudashova",
+        "Rutt Kukk",
+        "Endrik Kull",
+        "Andra Kullerkupp",
+        "Siiri Kumari",
+        "Tiina-Mae Kuusik",
+        "Julia Kähri",
+        "Maarja Käsk",
+        "Toomas Kästik",
+        "Eva-Lotta Künnap",
+        "Jaan Lepnurm",
+        "Reen Liivat-Oorschot",
+        "Üllar Lindmaa",
+        "Maris Lindoja",
+        "Tiit Ling",
+        "Liina Lobjakas",
+        "Aleksei Lukašin",
+        "Viive Lussmaa",
+        "Aare Luup",
+        "Erlich Lõwi",
+        "Traugott Läänmäe",
+        "Ege Meister",
+        "Svetlana Mihhailova",
+        "Olev Mihkelmaa",
+        "Piret Moora",
+        "Karl Robert Mägi",
+        "Mardo Männimägi",
+        "Aleksei Narusberg",
+        "Kirill Nelus",
+        "Alla Nikitina",
+        "Kaupo Nõlvak",
+        "Kalle Olumets",
+        "Mansur Ongarbayev",
+        "Vahur Parve",
+        "Ken Peedimaa",
+        "Gunnar Peipman",
+        "Roman Petrašvili",
+        "Karin Plangi",
+        "Rain-Julius Plangi",
+        "Natalia Popova",
+        "Toivo Pärnpuu",
+        "Herve Rannu",
+        "Pille Raud",
+        "Mattias Raun",
+        "Pille Reins",
+        "Rein Reinstein",
+        "Vitali Retšnoi",
+        "Mikk Rosin",
+        "Terli Rüütli",
+        "Reljo Saarepera",
+        "Siiri Salin",
+        "Heikki Sal-Saller",
+        "Jevgeni Sikorski",
+        "Tatjana Sinelnik",
+        "Triin Sirila",
+        "Jaanika Stackhouse",
+        "Irina Stassenko",
+        "Helena Stern-Kopra",
+        "Kaspar Martin Suursalu",
+        "Kerim Sütcü",
+        "Marina Zotikova",
+        "Julia Tammela",
+        "Marje Tammert",
+        "Inna Tammet",
+        "Aivar Teinveld",
+        "Anna-Liisa Tiisma",
+        "Raivo Timm",
+        "Rain Tirul",
+        "Timo Triisa",
+        "Maksim Tšurkin",
+        "Jelizaveta Tšuvpilo",
+        "Viljar Tölp",
+        "Klea Vaher",
+        "Priit Valge",
+        "Lembit Vali",
+        "Terje Varul",
+        "Vadim Veeremaa",
+        "Elen Viikmann",
+        "Krister Viirsaar",
+        "Kertti Viru",
+        "Viivika Volt",
+        "Elina Õunapuu",
+      ];
+    }
+
+    function isKnownSubject(value) {
+      return value in [
+        "Digioskuste arendamine",
+        "Õpitee",
+        "IT valdkonna alusteadmised",
+        "Eesti keel",
+        "Minapilt",
+        "Programmeerimise alused",
+        "Matemaatika",
+        "Liikumised ja jõud",
+        "Loodusteaduste metodoloogia",
+        "Inglise keel",
+        "Suhtlemiseõpetus",
+        "Elektroonika ja digitehnika alused",
+        "Sidetehnoloogiate areng",
+        "Elektrotehnika",
+        "Materjaliõpetus",
+        "Elektroonikakomponendid",
+        "Keemia",
+        "Töö- ja mõõteriistad, tööohutus",
+        "Kujundus- ja fototöötlustarkvara",
+        "Tasapinnaline ja ruumiline geomeetria",
+        "Valdkonna põhialused",
+        "Karjäär energeetika sektoris ja ohutus",
+        "Linux operatsioonisüsteemid",
+        "Ajalugu",
+        "Energia",
+        "Kehakultuur",
+        "Keel ja kirjandus",
+        "Rakendusserverid ja teenused",
+        "Ühiskonnaõpetus",
+        "Arvutivõrgud",
+        "Veebirakenduste loomine",
+        "Keemia alused ja anorgaanilised ained",
+        "IT-süsteemide alused",
+        "Infoturve",
+        "IP-võrgud ja uued tehnoloogiad",
+        "Video- ja animatsiooni alused",
+        "Elekter ja magnetism",
+        "Pikselgraafika",
+        "Trükitehnikad ja trükkimine",
+        "Orgaanilised ained",
+        "Vektorgraafika",
+        "Trükiste tootmise protsess",
+        "Vene keel",
+        "Pilveteenuste alused",
+        "Automatiseerimine Linuxi platvormil",
+        "Andmebaasi serverite haldus",
+        "Pilveteenuste haldus",
+        "Kliendiseadmete halduse alused",
+        "Blockchange",
+        "Serveripoolsed tehnoloogiad veebirakenduse loomiseks",
+        "Hajusrakendused",
+        "Küberturbe alused",
+        "Andmebaasid",
+        "Tarkvaraarenduse meetodid",
+        "Mobiilirakenduste loomise alused",
+        "Testimise alused ja testimisplaan",
+        "Arvutimängude loomine",
+        "Elektrikilbi koostetööd",
+        "Digitaaltehnika",
+        "Erialane inglise keel",
+        "Käidu alused",
+        "Elektroonika alused",
+        "Eesti keel teise keelena",
+        "Soojustehnika alused",
+        "Pneumoautomaatika",
+        "Rakenduselektroonika",
+        "Majanduse ja ettevõtluse alused",
+        "Kõrgepingetehnika",
+        "Karjääritee",
+        "Eriotstarbeline tarkvara",
+        "Elektrialane seadusandlus",
+        "Elektriajamid ja nende juhtimine",
+        "Elektriseadmete ja -paigaldiste käit",
+        "Tööstuslikud elektriseadmed ja -paigaldised",
+        "Aktuaalsed tehnilised probleemid eriala",
+        "Elektervalgustus",
+        "PLC kontrollerid",
+        "Hoone- ja soojusautomaatika",
+        "Mõõteriistade kasutamine testimiseks",
+        "Tehniline dokumentatsioon",
+        "Rakendusmatemaatika",
+        "Projekt",
+        "Elektroonika seadmeteremontimine",
+        "Heli ja videotehnika",
+        "Traadita sidevõrgud",
+        "Rakenduselektroonika (praktilised tööd)",
+        "IT-halduse standadid",
+        "Värvihaldus",
+        "Fotograafia",
+        "Digitaaltrükk",
+        "Multimeedium",
+        "Trükikvaliteedi hindamine",
+        "Poognamontaaz",
+        "Ripi seadistamine ja trükiplaatide valmistamine",
+        "Trükkimine",
+        "Trükiste kujundamine",
+        "Kliendipoolne programmeerimine",
+        "Andmebaaside arendamine ja haldus",
+        "Serveripoolne programmeerimine",
+        "Tunnusgraafika",
+        "Videotehnika ja animatsiooni",
+        "Filmimine",
+        "Toote- ja portreefotod",
+        "3Dgraafika",
+        "Tükiste järeltöötlus",
+        "Zanrid fotograafias",
+        "Meistriklass",
+        "Illustratsioon",
+        "Kujundamine ja küljendamine",
+        "Projektijuhtimine praktikas",
+        "Sündmusfoto",
+        "Portee- ja grupifoto",
+        "Analoogfotograafia",
+        "Fototehnika",
+        "Tootefoto",
+        "Kompositsioon",
+        "Fototootlus",
+        "Mina ja minu tulevik",
+        "Suhtlemine ja koostööoskuse arendamine",
+        "Ainealse eesti keele oskuse arendamine",
+        "Õpioskuste arendamine",
+        "Rakendustarkvara",
+        "Op. süsteemide alused",
+        "Elektrivaldkonna ohutus ja esmaabi",
+        "Elektrimootorid ja -ajamid",
+        "Aruannete vorm",
+        "Elektrimõõtmised",
+        "Eesti energiasüsteem",
+        "Sisetööde elektriku kutse iseloomustus",
+        "Erialase joonestamise alused",
+        "SQL",
+        "Arvutivõrkude haldus, seadmed ja võrguteenused",
+        "Klienditeenindus",
+        "Lepingud ja hanked",
+        "Kutse-eetika",
+        "Rakendusserverite alused",
+        "Sissejuhatus õpingutesse",
+        "Ohutegurid töökohal",
+        "Erinevad hajusrakendused",
+        "Agiilne tarkvaraarendus",
+        "Tarkvara testimene",
+        "Programmeerimine",
+        "Projektijuhtimine",
+      ];
+    }
+    // END GENERATED LISTS
 
     // ===============================================================
     // Domain Validators
@@ -46,8 +344,8 @@ service cloud.firestore {
                                  'firstName', 'lastName', 'uid', 'createdAt']) &&
              data.keys().hasOnly(['subject', 'teacher', 'grade', 'comment',
                                   'firstName', 'lastName', 'uid', 'createdAt']) &&
-             isString(data.subject, 1, 200) &&
-             isString(data.teacher, 1, 200) &&
+             isKnownSubject(data.subject) &&
+             isKnownTeacher(data.teacher) &&
              data.grade is int && data.grade >= 1 && data.grade <= 5 &&
              isString(data.comment, 0, 2000) &&
              isString(data.firstName, 0, 100) &&
@@ -56,14 +354,30 @@ service cloud.firestore {
              data.createdAt == request.time;
     }
 
+    function isValidStaff(data) {
+      return data.keys().hasAll(['email', 'teacher', 'role']) &&
+             data.keys().hasOnly(['email', 'teacher', 'role']) &&
+             isString(data.email, 3, 200) &&
+             (data.teacher == null || isKnownTeacher(data.teacher)) &&
+             data.role in ['teacher', 'admin'];
+    }
+
     // ===============================================================
     // Rules
     // ===============================================================
 
     match /feedback/{feedbackId} {
       allow create: if isAuthenticated() && isValidFeedback(request.resource.data);
-      // Tagasiside on muutumatu ja kliendid ei saa seda lugeda.
-      allow read, update, delete: if false;
+      allow read: if isAdmin() ||
+                     (isStaff() && resource.data.teacher == staffData().teacher);
+      allow delete: if isAdmin();
+      allow update: if false;
+    }
+
+    match /staff/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create, update: if isAdmin() && isValidStaff(request.resource.data);
+      allow delete: if isAdmin();
     }
 
     // Kõik muu on vaikimisi keelatud.

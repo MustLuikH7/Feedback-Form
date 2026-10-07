@@ -1,11 +1,19 @@
 {
   "firestore": {
     "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+    "indexes": "firestore.indexes.json",
+    "predeploy": ["node scripts/sync-rules-lists.mjs"]
   },
   "auth": {
     "providers": {
-      "anonymous": true
+      "anonymous": true,
+      "emailPassword": true
     }
+  },
+  "hosting": {
+    "public": "frontend/dist",
+    "predeploy": ["npm --prefix frontend run build"],
+    "ignore": ["firebase.json", "**/.*"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
   }
 }

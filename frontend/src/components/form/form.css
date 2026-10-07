@@ -241,6 +241,11 @@
   transform: translateY(1px);
 }
 
+.button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 @media (max-width: 29.99rem) {
   .button {
     justify-self: stretch;

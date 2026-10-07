@@ -99,3 +99,38 @@ textarea {
     transition-duration: 0.01ms !important;
   }
 }
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--pen);
+}
+
+.page-footnote,
+.muted-note {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.page-footnote {
+  margin-top: var(--space-4);
+}
+
+.page-footnote a {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.page--wide > main {
+  max-width: none;
+}
+
+@media (min-width: 60rem) {
+  .page.page--wide {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+  }
+}

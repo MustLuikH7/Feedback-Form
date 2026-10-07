@@ -32,3 +32,20 @@
     top: clamp(3rem, 8vh, 6rem);
   }
 }
+
+.header-link {
+  justify-self: start;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}
+
+.header-link:hover {
+  color: var(--pen);
+}
+
+.page--wide .header {
+  position: static;
+  max-width: 40rem;
+}

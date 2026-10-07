@@ -1,0 +1,274 @@
+.sheet-narrow {
+  max-width: 28rem;
+}
+
+.sheet-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.link-button {
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  color: var(--pen);
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.checkbox input {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+/* Dashboard */
+
+.dashboard {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.dashboard-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.filters {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 40rem) {
+  .filters {
+    grid-template-columns: repeat(auto-fit, minmax(0, 20rem));
+  }
+}
+
+/* Summary: average, count and a grade distribution like a gradebook tally */
+
+.summary {
+  gap: var(--space-6);
+}
+
+@media (min-width: 40rem) {
+  .summary {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-12);
+  }
+}
+
+.summary-stats {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.stat {
+  display: grid;
+}
+
+.stat-value {
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.summary-stats .stat:first-child .stat-value {
+  color: var(--pen);
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.bars {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) 2.5rem;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.bar-grade {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  text-align: center;
+}
+
+.bar-track {
+  height: 0.75rem;
+  background: var(--paper);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  border-radius: inherit;
+  transition: width var(--duration) var(--ease);
+}
+
+.bar-count {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Feedback entries: the grade circled in the margin, like a marked paper */
+
+.entries {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.entry-grade {
+  padding-top: var(--space-1);
+  text-align: center;
+}
+
+.entry-body {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.entry-subject {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.entry-comment {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.entry-comment.is-empty {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.entry-author {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--muted);
+}
+
+.entry-delete {
+  grid-column: 2;
+  justify-self: start;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+@media (min-width: 40rem) {
+  .entry {
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  }
+
+  .entry-delete {
+    grid-column: 3;
+  }
+}
+
+/* Admin */
+
+.admin {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--rule);
+}
+
+.staff-table {
+  display: table;
+  width: 100%;
+  padding: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-sm);
+  overflow: hidden;
+}
+
+.staff-table th,
+.staff-table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: start;
+  border-bottom: 1px solid var(--rule);
+  overflow-wrap: anywhere;
+}
+
+.staff-table th {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.staff-table tr:last-child td {
+  border-bottom: 0;
+}
