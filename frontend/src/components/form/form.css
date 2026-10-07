@@ -1,0 +1,275 @@
+.sheet {
+  display: grid;
+  gap: var(--space-6);
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+/* Fields */
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field-label {
+  padding: 0;
+  font-weight: 600;
+}
+
+.field-sublabel {
+  font-size: var(--text-sm);
+}
+
+.field-optional,
+.field-hint {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.field-hint {
+  margin-top: calc(var(--space-1) * -1);
+}
+
+.field-error {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--pen);
+}
+
+.field-error::before {
+  content: "!";
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--pen);
+  color: var(--surface);
+  font-size: 0.75rem;
+}
+
+/* Controls */
+
+.control {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid #a9a496;
+  border-radius: var(--radius);
+  transition: border-color var(--duration) var(--ease);
+}
+
+.control:hover {
+  border-color: var(--ink);
+}
+
+.control:focus-visible {
+  outline-offset: 0;
+  border-color: var(--focus);
+}
+
+.control[aria-invalid="true"] {
+  border-color: var(--pen);
+  box-shadow: inset 3px 0 0 var(--pen);
+}
+
+.control-select {
+  appearance: none;
+  padding-inline-end: var(--space-12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231c2024' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-4) center;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.control-select:has(option[value=""]:checked) {
+  color: var(--muted);
+}
+
+.control-select option {
+  color: var(--ink);
+}
+
+.control-textarea {
+  min-height: 7.5rem;
+  resize: vertical;
+}
+
+.control::placeholder {
+  color: #7a8088;
+}
+
+.name-row {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 30rem) {
+  .name-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Grades: the Estonian 1–5 scale, circled in red pen when chosen */
+
+.grades-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.375rem, 1.5vw, var(--space-2));
+}
+
+.grade {
+  position: relative;
+  display: grid;
+}
+
+.grade-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.grade-label {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--duration) var(--ease),
+    background-color var(--duration) var(--ease);
+}
+
+.grade-label:hover {
+  border-color: var(--ink);
+}
+
+.grade-input:focus-visible + .grade-label {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.grade-input:checked + .grade-label {
+  border-color: var(--pen);
+  background: #fdf6f4;
+}
+
+.grades[aria-describedby] .grade-label {
+  border-color: var(--pen);
+}
+
+.grade-num {
+  position: relative;
+  font-family: var(--font-serif);
+  font-size: 1.875rem;
+  line-height: 1.2;
+  font-variant-numeric: lining-nums;
+}
+
+.grade-word {
+  font-size: clamp(0.6875rem, 0.6rem + 0.35vw, 0.75rem);
+  line-height: 1.2;
+  color: var(--muted);
+  hyphens: auto;
+}
+
+.grade-input:checked + .grade-label .grade-num,
+.grade-num.is-circled {
+  color: var(--pen);
+}
+
+.grade-input:checked + .grade-label .grade-word {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* A hand-drawn ring, like a teacher's grade in the margin */
+.grade-input:checked + .grade-label .grade-num::after,
+.grade-num.is-circled::after {
+  content: "";
+  position: absolute;
+  inset: -0.1em -0.42em -0.02em -0.38em;
+  border: 2px solid var(--pen);
+  border-radius: 52% 48% 55% 45% / 46% 54% 48% 52%;
+  transform: rotate(-9deg);
+  animation: pen-circle 260ms var(--ease) both;
+}
+
+@keyframes pen-circle {
+  from {
+    opacity: 0;
+    transform: rotate(-40deg) scale(0.6);
+  }
+}
+
+/* Submit */
+
+.button {
+  justify-self: start;
+  min-height: var(--control-height);
+  padding-inline: var(--space-6);
+  background: var(--ink);
+  color: var(--paper);
+  border: 0;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--duration) var(--ease);
+}
+
+.button:hover {
+  background: #000;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 29.99rem) {
+  .button {
+    justify-self: stretch;
+  }
+}
+
+/* Sent state */
+
+.sheet-done {
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.done-grade .grade-num {
+  font-size: 4rem;
+  margin-inline-start: 0.4em;
+}
+
+.done-title {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.done-text {
+  max-width: 40ch;
+  color: var(--muted);
+}
+
+.sheet-done .button {
+  margin-top: var(--space-2);
+}

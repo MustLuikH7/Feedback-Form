@@ -1,0 +1,34 @@
+.header {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 34rem;
+}
+
+.header-brand {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-style: italic;
+  color: var(--pen);
+}
+
+.header-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.header-lead {
+  max-width: 32ch;
+  font-size: var(--text-lg);
+  color: var(--muted);
+}
+
+@media (min-width: 60rem) {
+  .header {
+    position: sticky;
+    top: clamp(3rem, 8vh, 6rem);
+  }
+}

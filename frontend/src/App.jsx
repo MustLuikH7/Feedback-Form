@@ -1,13 +1,14 @@
-import { useState } from 'react'
 import './App.css'
 import Header from './components/header/Header'
 import Form from './components/form/Form'
 function App() {
 
   return (
-    <div>
+    <div className="page">
       <Header />
-      <Form />
+      <main>
+        <Form />
+      </main>
     </div>
   )
 }
